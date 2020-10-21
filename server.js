@@ -55,6 +55,16 @@ function handleGetMovie(req, res){
         });
     }
     //check if search by avg_vote
+    if(avg_vote){
+        if(isNaN(avg_vote)){
+            return res.status(400).send('Please enter in a valid number');
+        }
+        results = results.filter(movie => {
+            return (
+                movie.avg_vote >= parseFloat(avg_vote)
+            );
+        })
+    }
 
 
     res.json(results);
