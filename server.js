@@ -6,6 +6,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const helmet = require('helmet');
+const movies = require('./movies-data-small.json');
 
 //set up app
 const app = express();
@@ -29,7 +30,34 @@ app.use(function validateBearerToken(req, res, next) {
 })
 //handle request functions
 function handleGetMovie(req, res){
-    res.send(`Let's go to the movies`);
+    const {genre, country, avg_vote} = req.query;
+    let results = movies;
+    //check if search by genre
+    if(genre){
+        results = results.filter(movie => {
+            return (
+                movie
+                .genre
+                .toLowerCase()
+                .includes(genre.toLowerCase())
+            );
+        });
+    }
+    //check if search by country 
+    if(country){
+        results = results.filter(movie => {
+            return(
+                movie
+                .country
+                .toLowerCase()
+                .includes(country.toLowerCase())
+            );
+        });
+    }
+    //check if search by avg_vote
+
+
+    res.json(results);
 }
 //get endpoints
 app.get('/movie', handleGetMovie);
